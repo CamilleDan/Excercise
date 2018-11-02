@@ -9,6 +9,8 @@
 
 import urllib
 import re
+import smtplib
+from email.mime.text import  MIMEText
 
 urls='https://tieba.baidu.com/p/5926553812?pn=%s'
 i=0
@@ -34,7 +36,8 @@ def email(url):
 
 while 1:
    i += 1
-   if i<= emails(urls %i):
+   end=int(emails(urls))
+   if i<= end:
        print ('正在爬取第'+str(i)+'页内容')
        html = email(urls %i)
        emailurl += html
@@ -43,9 +46,43 @@ while 1:
 
 
 
-fn=open('e:\demo\url.txt','a+')#路径，方式
-for i in emailurl:
-    fn.write(i+'\n')
+# fn=open('e:\demo\url.txt','a+')#路径，方式
+# for i in emailurl:
+#     fn.write(i+'\n')
+# f.close()
+print('总共爬取到%s个邮箱地址'%len(emailurl))
 
+mail_host='smtp.aliyun.com'
+mail_username='litianqiang@aliyun.com'
+mail_password='tanzhou123'
 
+def get_mail(to_mail,_text):#定义邮件
+    my='hello,'+mail_username
+    msg=MIMEText(_text,_subtype='html',_charset='utf-8')#格式化,发送邮件时使用的参数
+    msg['To']=';'.join(to_mailm)
+    msg['From']=my
+    msg''[Subject]='同学你好'
+
+    try:
+        s=smtplib.SMTP()#把发送邮件赋值到变量上显示错误代码
+        s.connect(mail_host)#连接邮件服务器
+        s.login(mail_username,mail_password)#登录邮件服务器
+        s.sendmail(my,to_mail,msg,as_string())#发件人、收件人、内容、
+        s.close()
+        return True
+
+    except:
+        print str(s)
+        return False
+me='<a  href="http://www.tanzhhouedu.com">这里有ps视频'
+
+i=0
+while 1:
+    if i <= end:
+        maillist=emailurl[i]
+        i+=1
+        if get_mail(maillist,me):
+            print '发送成功'
+        else:
+            print '发送失败'
 
