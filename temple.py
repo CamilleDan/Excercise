@@ -4,6 +4,7 @@
 """
 
 import numpy as np
+import pandas as pd
 #numpy 入门
 a=np.array([[1,2,3],
             [4,5,6],
@@ -58,3 +59,7 @@ b=np.tile(b,(4,1))
 print c+b
 b1=np.array([1,2,3])
 print c+b1
+
+#量化交易
+#dandas基础模块应用
+s1=pd.Series{}
