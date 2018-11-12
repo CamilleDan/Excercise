@@ -61,6 +61,49 @@ b1=np.array([1,2,3])
 print c+b1
 
 #量化交易
+#pandas基础模块应用Series
+s=pd.Series([1,2,3,4,3],index=['a','b','c','d','e'])
+print s
+s1=pd.Series(['f',2,3.0,True,3],index=['a','b','c','d','e'])
+print s1
+s2=pd.Series([1.0,2,3.0,3.2,3],index=['a','b','c','d','e'])
+print s2
+s3=pd.Series(np.random.randn(5),index=['a','b','c','d','e'])
+print s3
+s4=pd.Series(np.array([1,2,3,4,5]))#Series对象只能是一维的
+print s4
+#使用字典创建series可以不写index，若写index则会根据index排序显示series，index无值显示NAN
+s5=pd.Series({'A':1,'C':'T','B':True},index=['A','B','C'])
+print s5
+#数值长度小于index时数值会自动补齐index
+s6=pd.Series(5.,index=['a','b','c'])
+print s6
+#series对象的访问
+#s.values,s.index,索引，切片
+s5=pd.Series({'A':1,'C':'T','B':True,'e':1.9},index=['A','B','C','e'])
+print s5.values
+print s5.index
+print s5['A']
+print s5[['A','B','C']]
+print s5[:2]
+print s5[3]
+#Dataframe生成和访问方法
+df1=pd.DataFrame({'a':[1.67,22,'a',True],'b':[1.73,22,'b',False]},
+                 index=['height','age','id','is inland'])
+print df1
+#使用二维np.ndarray创建dataframe
+#创建2行n列的0矩阵
+data=np.zeros((2,),dtype=[('a','i4'),('b','f4'),('c','a10')])#dtype指定列名和数据类型
+#替换0矩阵的值
+data[:]=[(1,2,'hello'),(2,4,'python')]
+#用ndarray创建Dataframe
+df2=pd.DataFrame(data,index=['first','second'],columns=['a','c','b','d'])
+print df2
+#以列表形式的字典创建dataframe
+df3=pd.DataFrame([{'a':1.0,'b':'r'},{'a':2.0,'b':'e','c':True}])
+print df3
+df3=pd.DataFrame([{'a':1.0,'b':'r'},{'a':2.0,'b':'e','c':True}])
+
 #pandas基础模块应用ndarray
 
 s=pd.Series([1.2,2.3,3,34],dtype='int8')
@@ -87,3 +130,10 @@ print df1
 #dataframe访问方法
 #df.index,df.values,df.columns,df.loc,df.ix
 
+<<<<<<< HEAD
+=======
+#导入文件数据
+csv1=pd.read_csv('c://',index_col=0,encoding='gb2312')#文件路径
+#header=1表示行标题在第几行None表示文件没有列索引，names=range(2,8)，
+#encoding=''
+>>>>>>> 90678ba7c0e88726e0e512c846dffd411cc2e614
