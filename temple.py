@@ -86,3 +86,4 @@ df1=pd.DataFrame({'one':[1,2,3,4],'two':[1.2,3.4,2,2]},index=['l','a','b','c'])
 print df1
 #dataframe访问方法
 #df.index,df.values,df.columns,df.loc,df.ix
+
