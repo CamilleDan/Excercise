@@ -130,3 +130,7 @@ print df1
 #dataframe访问方法
 #df.index,df.values,df.columns,df.loc,df.ix
 
+#导入文件数据
+csv1=pd.read_csv('c://',index_col=0,encoding='gb2312')#文件路径
+#header=1表示行标题在第几行None表示文件没有列索引，names=range(2,8)，
+#encoding=''
