@@ -104,4 +104,29 @@ df3=pd.DataFrame([{'a':1.0,'b':'r'},{'a':2.0,'b':'e','c':True}])
 print df3
 df3=pd.DataFrame([{'a':1.0,'b':'r'},{'a':2.0,'b':'e','c':True}])
 
+#pandas基础模块应用ndarray
+
+s=pd.Series([1.2,2.3,3,34],dtype='int8')
+print s
+#以ndarray数据类型创建Series
+s1=pd.Series([1.23,'r',0.98,4,True],index=['a','b','c','d','e'])#数据，行名，数据类型
+print s1
+s2=pd.Series(np.random.rand(3),index=['i','d','f'])
+print s2
+#以字典创建Series
+s3=pd.Series({'a':0,'b':'a','c':True},index=['s','a','b','c'])#若为字典制定index，则index会自动匹配字典的key，匹配不到的显示nan
+print s3
+
+#Series访问方法
+#s.index,s.values，索引，切片
+print s.values
+print s1.index
+print s1[['a','b']]
+print s1[2:3]
+
+#dataframe
+df1=pd.DataFrame({'one':[1,2,3,4],'two':[1.2,3.4,2,2]},index=['l','a','b','c'])
+print df1
+#dataframe访问方法
+#df.index,df.values,df.columns,df.loc,df.ix
 
