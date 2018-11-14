@@ -3,6 +3,9 @@ import numpy as np
 import pandas as pd
 import json
 from collections import Counter
+from matplotlib import pylab
+from matplotlib import pyplot as plt
+
 
 #t1=pd.read_table(r"C:\pycharm\pydata-book-2nd-edition\datasets\bitly_usagov\example.txt")
 #print t1
@@ -35,9 +38,32 @@ def top_ten_counts(count_dict,n=10):
 top10_tz=top_ten_counts(counts)
 print top10_tz
 
-#使用pandas进行寻找前十时区
+#使用collection Counter类进行寻找前十时区
 cnt = Counter()
 
 for tz in time_zones:
     cnt[tz] += 1
 print cnt
+
+#用pandas进行时区计数
+frame=pd.DataFrame(records)
+#print frame
+#print frame['tz'][:10]
+tz_counts=frame['tz'].value_counts()
+print tz_counts[:10]
+#使用matplotlib生成图片
+clean_tz=frame['tz'].fillna('Missing')
+#print clean_tz
+clean_tz[clean_tz==' ']='Unknow'
+#print  clean_tz[:10]
+tz_counts1=clean_tz.value_counts()
+print tz_counts1[:10]
+#画图
+fig=plt.figure()
+tz_counts1[:10].plot(kind='barh',rot=0)
+plt.show()
+
+
+# #解析agent信息
+# a=frame['a']
+# print a
