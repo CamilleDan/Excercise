@@ -61,9 +61,30 @@ print tz_counts1[:10]
 #画图
 fig=plt.figure()
 tz_counts1[:10].plot(kind='barh',rot=0)
+#plt.show()
+
+
+#解析agent信息
+a=frame['a']
+#print a
+results=pd.Series([x.split()[0] for x in frame.a.dropna()])
+print  results[:5]
+print results.value_counts()[:10]
+
+#操作系统用户画像
+cframe=frame[frame.a.notnull()]
+operating_sys=np.where(cframe['a'].str.contains('Windows'),'Window','not Windos')
+print operating_sys[:5]
+#根据时区和操作系统分组
+by_tz_os=cframe.groupby(['tz',operating_sys])
+agg_counts=by_tz_os.size().unstack().fillna(0)
+print agg_counts[:10]
+
+indexer=agg_counts.sum(1).argsort()
+count_subset=agg_counts.take(indexer)[-10:]
+print count_subset
+#堆积条形图
+#count_subset.plot(kind='barh',stacked=True)
+normed_subset=count_subset.div(count_subset.sum(1),axis=0)
+normed_subset.plot(kind='barh',stacked=True)
 plt.show()
-
-
-# #解析agent信息
-# a=frame['a']
-# print a
