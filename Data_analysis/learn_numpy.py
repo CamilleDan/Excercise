@@ -37,3 +37,56 @@ print one1
 array2=np.arange(13)
 print array2
 
+#ndarray的数据类型
+arr1=np.array([1,2,3],dtype='int32')
+print arr1.dtype
+arr1=arr1.astype('float32')#转换数据类型
+print arr1.dtype
+
+#熊浮点数类型换为整数类型时小数点后面的数会被截断
+arr2=np.array([1.2,3.2,13.22,3.11],dtype='float64')
+print arr2
+arr2=arr2.astype('int64')
+print arr2
+
+#字符串里面全是数字则可以转换为数字类型
+arr3=np.array(['1.2','3.2','1.1'],dtype='string_')
+print arr3
+arr3=arr3.astype('float')
+print arr3
+print arr3.dtype
+
+#数组和标量之间的运算
+arr4=np.array([[1,2,3],[1,2,3]])
+print arr4+arr4
+print arr4**2
+print arr4/2.0
+#不同大小的数组在一起运算叫广播
+
+#基本的索引和切片
+arr5=np.array(np.arange(10))
+print arr5[5]
+print arr5[2:4]
+print arr5[-3:]
+
+#二维数组的索引
+arr6=np.array([[1,2,3],[2,3,4],[3,4,5]])
+print arr6[1]
+print arr6[0][1]
+
+#三维数组
+arr7=np.array([[[1,2,3],[2,3,4]],[[2,3,4],[3,4,5]]])
+print arr7
+print arr7[0]
+print arr7[0][1]
+old_values=arr7[0][1].copy()
+arr7[0][1]=[1,1,1]
+print arr7
+
+#切片索引
+print arr6[:2]
+print arr6[:2,1:]
+arr6[:1,:]=0
+print arr6[0,:].shape
+print arr6[:1,:].shape
+print arr6
