@@ -90,3 +90,52 @@ arr6[:1,:]=0
 print arr6[0,:].shape
 print arr6[:1,:].shape
 print arr6
+
+#布尔值逻辑判断和切片
+names=np.array(['bob','joe','will','joe','joe','bob','will'])
+data=np.random.randn(7,4)
+print names
+print data
+
+print names=='bob'
+print data[names=='bob']
+
+mark=(names=='bob')|(names=='will')
+print data[mark]
+
+data[data<0]=0
+print data
+
+data[names=='joe']=7
+print data
+
+#花式索引
+arr8=np.empty((8,4))
+for i in range(8):
+    arr8[i]=i
+print arr8
+print arr8[[1,2,4,5]]
+print arr8[[-1,-2,-5,-3]]
+print arr8[[2,1,3]][:,[2,3,1]]
+print arr8[np.ix_([1,2,1],[1,1,1])]#将两个以为整数数组转换为一个方形区域
+
+#转置和轴对换
+array3=np.arange(15).reshape(3,5)
+print array3
+print array3.T
+array4=np.random.randn(6,3)#规定行列的标准正太随机数
+ji=np.dot(array4,array4.T)#计算矩阵的內积
+print ji
+
+#通用的元素级数组函数
+x=np.random.rand(10)
+y=np.random.rand(10)
+
+print np.sqrt(x)
+print np.maximum(x,y)#两个数列对比提取每个元素的最大值
+print np.modf((x+2.2))
+print (x+2)**2
+print np.log2(y)
+print np.exp(x)
+y=y.astype('float32')
+print np.isnan(y)
