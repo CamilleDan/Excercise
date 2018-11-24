@@ -4,6 +4,8 @@
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
+
 #array接受一切为序列型的对象
 data=[1,2,3,4,3,5,6]
 array=np.array(data)
@@ -139,3 +141,85 @@ print np.log2(y)
 print np.exp(x)
 y=y.astype('float32')
 print np.isnan(y)
+
+#数组进行数据处理
+point=np.arange(-5,5,0.01)
+ys,xs=np.meshgrid(point,point)
+print ys
+
+# z=np.sqrt(xs**2+ys**2)
+# print z
+# plt.imshow(z)
+# plt.colorbar()
+
+#将条件逻辑表述转化为数组运算
+xarr=np.array([1.1,1.2,1.3,1.4,1.5])
+yarr=np.array([2.1,2.2,2.3,2.4,2.5])
+cond=np.array([True,False,True,True,False])
+result=np.where(cond,xarr,yarr)#条件，满足时替换为，不满足时替换为
+print result
+#where方法
+arr=np.random.randn(4,4)
+print arr
+arr=np.where(arr>0,2,-2)
+print arr
+
+#统计方法
+array5=np.arange(12).reshape(3,4)
+print array5
+print array5.mean()#所有元素求平均
+print array5.mean(axis=0)#axis=0表示按列计算，1表示按行计算
+print array5.sum()#所有元素求和
+print array5.cumsum(1)#按列累计求和
+print array5.cumprod(0)#按行累计求积
+
+#布尔数组方法
+ran=np.random.randn(100)
+print (ran>0).sum()#正值的数量
+ran1=np.array([1,0,0,0])
+print ran1.any()#所有非0元素会被当成True；只能判断数值类型不能判断复合型数组
+
+#排序
+arr3=np.random.randn(8)
+arr3.sort()
+print arr3
+arr3=np.random.randn(4,4)
+arr3.sort(axis=1)#按行升序排序
+print arr3
+#排序计算分位数
+long_arr=np.array([1,2,3,4,5,5,5,6,7,3,4,5,6,8,9,10,1,12,1,3,2,2,2,3,3,3,1,1,1,1])
+long_arr.sort()
+percent25=long_arr[int(0.25*len(long_arr))]
+print percent25
+
+#数组的集合运算
+name1=['bob','joe','bob','will','joe','will']
+name2=['john','amy','bob','joe','kate','john','kate']
+np.unique(name1)
+np.intersect1d(name1,name2)#返回公共元素
+np.union1d(name1,name2)#返回并集
+np.in1d(name1,name2)#返回x是否包含y的布尔数组
+np.setdiff1d(name1,name2)#返回数组的差
+np.setxor1d(name1,name2)#返回数组的对称差
+
+np.save('long_arr.npy',long_arr)#以二进制格式将数组保存到磁盘，后缀名为npy
+np.load('long_arr.npy')
+np.savez('arraies.npz',a=long_arr,b=arr3)#将多个数组保存到一个压缩文件中后缀名为npz
+arr6=np.load('arraies.npz')#以字典的 形式加载
+print arr6['a']
+print arr6['b']
+
+#矩阵运算
+x1=np.array([[1,2],[3,2]])
+y1=np.array([1,1])
+prod=np.dot(x1,y1)#矩阵乘法
+print prod
+from numpy.linalg import qr,inv
+mat=x1.T.dot(x1)#矩阵的转置乘矩阵
+inv_mat=inv(mat)#矩阵的逆
+q,r=qr(mat)#矩阵的qr分解
+print r
+print inv_mat
+xx1=inv_mat.dot(mat)
+print xx1
+
