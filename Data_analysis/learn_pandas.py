@@ -113,6 +113,3 @@ s3=df5['a']
 df6.add(df5,fill_value=0)#用df5的add方法指定填充值，则会将没有重叠的地方自动填充值并加入运算
 print df5+df6#两个df相加没有重叠位置就会产生nan
 print df5.sub(s3,axis=0)#指定匹配的轴，0表示匹配行进行列广播，1表示匹配列行广播
-
-#
-df6.sort_values(by='a')
