@@ -80,4 +80,39 @@ print obj
 #drop方法的使用
 df4=pd.DataFrame(np.arange(16).reshape(4,4),index=['Ohio','Colorado','Utah','New York'],columns=['one','two','three','four'])
 df4.drop('Ohio')
-df4.drop(['one','two'],axis=1)
+df4.drop(['one','two'],axis=1)#指定必须制定axis，1表示删除列
+
+#索引
+obj1=pd.DataFrame(np.arange(12).reshape(3,4),index=['one','two','three'],columns=['a','b','c','d'])
+obj=pd.Series(np.arange(3),index=['one','two','three'])
+#Series可通过index来索引行
+print obj
+print obj['one']
+print obj[1]
+print obj[['one','two']]
+print obj[obj>0]
+print obj[1:2]
+print obj[[1,2]]
+#Dataframe可通过column索引列，可通过标量和布尔值索银行，不可通过index索银行
+print obj1['a']
+print obj1[:2]
+print obj1[obj1['c']>5]
+#因此选取dataframe行和列的子集需要通过ix方法进行选取，ix是一种重新索引的简单手段
+#数据自动对齐,取其并集
+s1=pd.Series(np.arange(4),index=['a','b','c','d'])
+s2=pd.Series([1,3,5,6],index=['a','b','c','e'])
+print s1+s2
+
+obj2=pd.DataFrame(np.arange(12).reshape(3,4),index=['one','two','three'],columns=list('abcd'))
+print obj2
+obj1.add(obj2,fill_value=0)#add表示加法，fill_value表示对nan填充值
+#在算数方法中填充值
+df5=pd.DataFrame(np.arange(12).reshape(3,4),index=['a','b','c'],columns=list('1234'))
+df6=pd.DataFrame(np.arange(20).reshape(4,5),index=['a','b','c','d'],columns=list('12345'))
+s3=df5['a']
+df6.add(df5,fill_value=0)#用df5的add方法指定填充值，则会将没有重叠的地方自动填充值并加入运算
+print df5+df6#两个df相加没有重叠位置就会产生nan
+print df5.sub(s3,axis=0)#指定匹配的轴，0表示匹配行进行列广播，1表示匹配列行广播
+
+#
+df6.sort_values(by='a')
