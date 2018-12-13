@@ -123,3 +123,55 @@ print df5.sub(s3, axis=0)  # 指定匹配的轴，0表示匹配行进行列广�
 
 # 函数应用和映射
 frame = pd.DataFrame(np.random.randn(4, 3), columns=list('012'))
+print frame
+np.abs(frame)
+# apply函数应用
+f = lambda x: x.max() - x.min()
+frame.apply(f, axis=1)
+
+
+def g(x):
+    return pd.Series([x.max(), x.min()], index=['min', 'max'])
+
+
+g(frame)
+
+# 排序和排名
+frame.sort_values(by='2', ascending=True)  # 按指定列排序
+frame.sort_index()
+
+frame2 = pd.DataFrame({'a': [1, 1, 0, 0], 'b': [2, 3, 4, 5]})
+frame2.sort_values(by=['a', 'b'], ascending=False)
+
+# 重复值的轴索引
+frame3 = pd.DataFrame(np.random.randn(3, 4), columns=list('aabb'))
+print frame3['a']
+
+# 协方差与相关系数
+
+
+# 唯一值、计数、成员资格
+s1.unique()  # Series有效
+s1.value_counts()
+s1.isin(['1'])
+
+# 处理缺失数据
+string_data=pd.Series(['aaada','dsau',np.nan,'safe'])
+print string_data
+string_data.isnull()  # None也会被当做Nan
+
+string_data.dropna()  # 删除缺失值
+
+string_data1=pd.DataFrame(np.random.randn(3,3))
+string_data1[3]=np.nan
+string_data1.iloc[0,1]=np.nan
+string_data1.iloc[1,0]=np.nan
+string_data1.iloc[2,3]=2
+print string_data1
+string_data1.dropna(thresh=2)  # 时间序列数据适用，thresh表示筛选一行中有thresh参数指定的完整数据的行
+
+string_data1.dropna(how='all',axis=1)  # 丢弃所有行都是NA的数据
+
+# 填充缺失数据
+string_data1.fillna(-1)
+
