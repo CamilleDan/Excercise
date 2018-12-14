@@ -5,6 +5,7 @@
 
 import pandas as pd
 import numpy as np
+from pandas import DataFrame
 
 s = pd.Series([1, -2, 3, 4])
 print s
@@ -125,9 +126,14 @@ print df5.sub(s3, axis=0)  # 指定匹配的轴，0表示匹配行进行列广�
 frame = pd.DataFrame(np.random.randn(4, 3), columns=list('012'))
 print frame
 np.abs(frame)
+
+
 # apply函数应用
-f = lambda x: x.max() - x.min()
-frame.apply(f, axis=1)
+def cha(x):
+    return x.max() - x.min()
+
+
+frame.apply(cha, axis=1)
 
 
 def g(x):
@@ -156,22 +162,54 @@ s1.value_counts()
 s1.isin(['1'])
 
 # 处理缺失数据
-string_data=pd.Series(['aaada','dsau',np.nan,'safe'])
+string_data = pd.Series(['aaada', 'dsau', np.nan, 'safe'])
 print string_data
 string_data.isnull()  # None也会被当做Nan
 
 string_data.dropna()  # 删除缺失值
 
-string_data1=pd.DataFrame(np.random.randn(3,3))
-string_data1[3]=np.nan
-string_data1.iloc[0,1]=np.nan
-string_data1.iloc[1,0]=np.nan
-string_data1.iloc[2,3]=2
+string_data1 = pd.DataFrame(np.random.randn(3, 3))
+string_data1[3] = np.nan
+string_data1.iloc[0, 1] = np.nan
+string_data1.iloc[1, 0] = np.nan
+string_data1.iloc[2, 3] = 2
 print string_data1
 string_data1.dropna(thresh=2)  # 时间序列数据适用，thresh表示筛选一行中有thresh参数指定的完整数据的行
 
-string_data1.dropna(how='all',axis=1)  # 丢弃所有行都是NA的数据
+string_data1.dropna(how='all', axis=1)  # 丢弃所有行都是NA的数据
 
 # 填充缺失数据
 string_data1.fillna(-1)
+string_data1.fillna(string_data1.mean())
 
+# 层次化索引
+data2 = pd.Series(np.random.randn(9),
+                  index=[['a', 'a', 'a', 'b', 'b', 'b', 'c', 'c', 'c'], [1, 2, 3, 1, 2, 3, 1, 2, 3]])
+print data2
+print data2['a']
+print data2['a':'b']
+print data2.loc[['a', 'c']]
+print data2[:, 1]  # 直接筛选内层数据
+data2.unstack()  # 直接转化为dataframe
+
+frame4 = pd.DataFrame(np.random.rand(4, 3), index=[['a', 'a', 'b', 'b'], [1, 2, 1, 2]],
+                      columns=[['ohio', 'ohio', 'colorado'], ['g', 'r', 'g']])
+print frame4
+frame4.index.names = ['key1', 'key2']
+frame4.columns.names = ['state', 'color']
+print frame4['colorado']
+print frame4.loc['a']
+# MultiIndex.from_arrays([['ohio', 'ohio', 'colorado'], ['g', 'r', 'g']],column_names=['state','color'])
+frame4.swaplevel('key1', 'key2')  # 交换某两条轴
+frame4.sortlevel(1)
+frame4.swaplevel(0, 1).sortlevel(0)  # 按级别排序
+# 根据级别汇总统计
+# level选项指定在某条轴上求和的级别
+frame4.sum(level='state', axis=1)
+frame4.sum(level='key2', axis=0)
+frame5 = pd.DataFrame(
+    {'a': range(7), 'b': range(7, 0, -1), 'c': ['a', 'a', 'a', 'b', 'b', 'b', 'b'], 'd': [0, 1, 0, 1, 0, 1, 0]})
+print frame5
+frame6 = frame5.set_index(['c'], drop=True)  # drop=False表示保留c列
+print frame6
+frame6.reset_index()  # set_index的逆运算
