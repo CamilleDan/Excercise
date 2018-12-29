@@ -1,215 +1,1 @@
-# -*- coding: utf-8 -*-
-"""
-@author: Yangdan
-"""
-
-import pandas as pd
-import numpy as np
-from pandas import DataFrame
-
-s = pd.Series([1, -2, 3, 4])
-print s
-s1 = pd.Series([1, -2, 3, 4], index=['a', 'b', 'c', 'd'])
-print s1
-print s1.index
-print s1.values
-s1.index = ['a', 'e', 'r', 't']
-print s1.index
-
-s.name = 'text'  # 对象名称
-s.index.name = 'text'  # 索引名称
-print s
-
-data1 = {'a': 1, 'b': '', 'c': '4a', 'd': 'p'}  # 用字典创建dataframe
-s2 = pd.Series(data1)
-print s2
-print s2.isnull()  # 判断是否有缺失值
-index = ['a', 'b', 'c', 'e']
-s2 = pd.Series(data1, index=index)  # 会根据索引自动匹配data1里面的元素，不存在的index现实为Nan
-print s2.notnull()  # 判断是否有缺失值
-
-# Dataaframe
-data = {'id': [1, 2, 3, 4], 'name': ['bob', 'joe', 'will', 'lisa'],
-        'states': ['LA', 'NY', 'California', 'NY']}  # 字典类型的Series创建df
-df1 = pd.DataFrame(
-    {'id': [1, 2, 3, 4], 'name': ['bob', 'joe', 'will', 'lisa'], 'states': ['LA', 'NY', 'California', 'NY']},
-    index=[1, 2, 3, 4])
-df2 = pd.DataFrame(data, columns=['id', 'name', 'states', 'debt'])
-# 对已有数据进行创建新的df时，df会根据column自动匹配存在的数据，不存在的column则显示为nan
-print df2
-print df1['states']
-print df1.iloc[2, :]
-# 按行切片
-df2['debt'] = [1200, 1300, 2200, 1500]
-# 新增column
-df2['debt'] = np.arange(4)
-val = pd.Series([1, 2.2, 3], index=[0, 2, 1])
-df2['est'] = val  # 以Series的方式添加df的column
-print df2
-del df2['est']  # 删除df的column
-print df2
-# 注意，index不可修改！！！！！！！！
-
-# 嵌套式字典
-zi = {'gz': {'2001': 12, '2002': 13}, 'xj': {'2001': 12, '2002': 22}}
-df3 = pd.DataFrame(zi).T  # 内层的key会自动变为index
-df3.name = 'enviroment'
-df3.index.name = 'city'
-df3.columns.name = 'year'
-print df3
-print df3.index
-print df3.values
-
-# 索引对象
-index = df3.index
-print index
-# index[0]='bj'#index对象是不可被修改的！
-print 'gz' in index
-print 'bj' in index
-print index
-
-# Index对象的append方法
-ind1 = df3.T.index
-ind2 = pd.Index(['2003', '2004'])
-ind = pd.Index.append(ind1, ind2)
-print ind
-# 计算index对象的差集
-ind_diff = pd.Index.difference(ind, ind1)
-print ind_diff
-# intersection交集，union并集，isin判断是否包含，delete删除索引i处的元素病得到新的index
-# drop删除传入的值，insert插入，unique计算唯一值得数组
-
-# reindex前向填充
-obj = pd.Series(['red', 'blue', 'yellow'], index=[0, 2, 4])
-obj = obj.reindex(range(6), method='ffill')
-print obj
-
-# drop方法的使用
-df4 = pd.DataFrame(np.arange(16).reshape(4, 4), index=['Ohio', 'Colorado', 'Utah', 'New York'],
-                   columns=['one', 'two', 'three', 'four'])
-df4.drop('Ohio')
-df4.drop(['one', 'two'], axis=1)  # 指定必须制定axis，1表示删除列
-
-# 索引
-obj1 = pd.DataFrame(np.arange(12).reshape(3, 4), index=['one', 'two', 'three'], columns=['a', 'b', 'c', 'd'])
-obj = pd.Series(np.arange(3), index=['one', 'two', 'three'])
-# Series可通过index来索引行
-print obj
-print obj['one']
-print obj[1]
-print obj[['one', 'two']]
-print obj[obj > 0]
-print obj[1:2]
-print obj[[1, 2]]
-# Dataframe可通过数值、column索引列，可通过标量和布尔值索银行，不可通过index索引行
-print obj1['a']
-print obj1[:2]
-print obj1[obj1['c'] > 5]
-# 因此选取dataframe行和列的子集需要通过ix方法进行选取，ix是一种重新索引的简单手段
-# 数据自动对齐,取其并集
-s1 = pd.Series(np.arange(4), index=['a', 'b', 'c', 'd'])
-s2 = pd.Series([1, 3, 5, 6], index=['a', 'b', 'c', 'e'])
-print s1 + s2
-
-obj2 = pd.DataFrame(np.arange(12).reshape(3, 4), index=['one', 'two', 'three'], columns=list('abcd'))
-print obj2
-obj1.add(obj2, fill_value=0)  # add表示加法，fill_value表示对nan填充值
-# 在算数方法中填充值
-df5 = pd.DataFrame(np.arange(12).reshape(3, 4), index=['a', 'b', 'c'], columns=list('1234'))
-df6 = pd.DataFrame(np.arange(20).reshape(4, 5), index=['a', 'b', 'c', 'd'], columns=list('12345'))
-s3 = df5['1']
-df6.add(df5, fill_value=0)  # 用df5的add方法指定填充值，则会将没有重叠的地方自动填充值并加入运算
-print df5 + df6  # 两个df相加没有重叠位置就会产生nan
-print df5.sub(s3, axis=0)  # 指定匹配的轴，0表示匹配行进行列广播，1表示匹配列行广播
-
-# 函数应用和映射
-frame = pd.DataFrame(np.random.randn(4, 3), columns=list('012'))
-print frame
-np.abs(frame)
-
-
-# apply函数应用
-def cha(x):
-    return x.max() - x.min()
-
-
-frame.apply(cha, axis=1)
-
-
-def g(x):
-    return pd.Series([x.max(), x.min()], index=['min', 'max'])
-
-
-g(frame)
-
-# 排序和排名
-frame.sort_values(by='2', ascending=True)  # 按指定列排序
-frame.sort_index()
-
-frame2 = pd.DataFrame({'a': [1, 1, 0, 0], 'b': [2, 3, 4, 5]})
-frame2.sort_values(by=['a', 'b'], ascending=False)
-
-# 重复值的轴索引
-frame3 = pd.DataFrame(np.random.randn(3, 4), columns=list('aabb'))
-print frame3['a']
-
-# 协方差与相关系数
-
-
-# 唯一值、计数、成员资格
-s1.unique()  # Series有效
-s1.value_counts()
-s1.isin(['1'])
-
-# 处理缺失数据
-string_data = pd.Series(['aaada', 'dsau', np.nan, 'safe'])
-print string_data
-string_data.isnull()  # None也会被当做Nan
-
-string_data.dropna()  # 删除缺失值
-
-string_data1 = pd.DataFrame(np.random.randn(3, 3))
-string_data1[3] = np.nan
-string_data1.iloc[0, 1] = np.nan
-string_data1.iloc[1, 0] = np.nan
-string_data1.iloc[2, 3] = 2
-print string_data1
-string_data1.dropna(thresh=2)  # 时间序列数据适用，thresh表示筛选一行中有thresh参数指定的完整数据的行
-
-string_data1.dropna(how='all', axis=1)  # 丢弃所有行都是NA的数据
-
-# 填充缺失数据
-string_data1.fillna(-1)
-string_data1.fillna(string_data1.mean())
-
-# 层次化索引
-data2 = pd.Series(np.random.randn(9),
-                  index=[['a', 'a', 'a', 'b', 'b', 'b', 'c', 'c', 'c'], [1, 2, 3, 1, 2, 3, 1, 2, 3]])
-print data2
-print data2['a']
-print data2['a':'b']
-print data2.loc[['a', 'c']]
-print data2[:, 1]  # 直接筛选内层数据
-data2.unstack()  # 直接转化为dataframe
-
-frame4 = pd.DataFrame(np.random.rand(4, 3), index=[['a', 'a', 'b', 'b'], [1, 2, 1, 2]],
-                      columns=[['ohio', 'ohio', 'colorado'], ['g', 'r', 'g']])
-print frame4
-frame4.index.names = ['key1', 'key2']
-frame4.columns.names = ['state', 'color']
-print frame4['colorado']
-print frame4.loc['a']
-# MultiIndex.from_arrays([['ohio', 'ohio', 'colorado'], ['g', 'r', 'g']],column_names=['state','color'])
-frame4.swaplevel('key1', 'key2')  # 交换某两条轴
-frame4.sortlevel(1)
-frame4.swaplevel(0, 1).sortlevel(0)  # 按级别排序
-# 根据级别汇总统计
-# level选项指定在某条轴上求和的级别
-frame4.sum(level='state', axis=1)
-frame4.sum(level='key2', axis=0)
-frame5 = pd.DataFrame(
-    {'a': range(7), 'b': range(7, 0, -1), 'c': ['a', 'a', 'a', 'b', 'b', 'b', 'b'], 'd': [0, 1, 0, 1, 0, 1, 0]})
-print frame5
-frame6 = frame5.set_index(['c'], drop=True)  # drop=False表示保留c列
-print frame6
-frame6.reset_index()  # set_index的逆运算
+# -*- coding: utf-8 -*-"""@author: Yangdan"""import pandas as pdimport numpy as npfrom pandas import DataFrames = pd.Series([1, -2, 3, 4])print(s)s1 = pd.Series([1, -2, 3, 4], index=['a', 'b', 'c', 'd'])print(s1)print(s1.index)print(s1.values)s1.index = ['a', 'e', 'r', 't']print(s1.index)s.name = 'text'  # 对象名称s.index.name = 'text'  # 索引名称print(s)data1 = {'a': 1, 'b': '', 'c': '4a', 'd': 'p'}  # 用字典创建dataframes2 = pd.Series(data1)print(s2)print(s2.isnull())  # 判断是否有缺失值index = ['a', 'b', 'c', 'e']s2 = pd.Series(data1, index=index)  # 会根据索引自动匹配data1里面的元素，不存在的index现实为Nanprint(s2.notnull())  # 判断是否有缺失值# Dataaframedata = {'id': [1, 2, 3, 4], 'name': ['bob', 'joe', 'will', 'lisa'],        'states': ['LA', 'NY', 'California', 'NY']}  # 字典类型的Series创建dfdf1 = pd.DataFrame(    {'id': [1, 2, 3, 4], 'name': ['bob', 'joe', 'will', 'lisa'], 'states': ['LA', 'NY', 'California', 'NY']},    index=[1, 2, 3, 4])df2 = pd.DataFrame(data, columns=['id', 'name', 'states', 'debt'])# 对已有数据进行创建新的df时，df会根据column自动匹配存在的数据，不存在的column则显示为nanprint(df2)print(df1['states'])print(df1.iloc[2, :])# 按行切片df2['debt'] = [1200, 1300, 2200, 1500]# 新增columndf2['debt'] = np.arange(4)val = pd.Series([1, 2.2, 3], index=[0, 2, 1])df2['est'] = val  # 以Series的方式添加df的columnprint(df2)del df2['est']  # 删除df的columnprint(df2)# 注意，index不可修改！！！！！！！！# 嵌套式字典zi = {'gz': {'2001': 12, '2002': 13}, 'xj': {'2001': 12, '2002': 22}}df3 = pd.DataFrame(zi).T  # 内层的key会自动变为indexdf3.name = 'enviroment'df3.index.name = 'city'df3.columns.name = 'year'print(df3)print(df3.index)print(df3.values)# 索引对象index = df3.indexprint(index)# index[0]='bj'#index对象是不可被修改的！print('gz' in index)print('bj' in index)print(index)# Index对象的append方法ind1 = df3.T.indexind2 = pd.Index(['2003', '2004'])ind = pd.Index.append(ind1, ind2)print(ind)# 计算index对象的差集ind_diff = pd.Index.difference(ind, ind1)print(ind_diff)# intersection交集，union并集，isin判断是否包含，delete删除索引i处的元素病得到新的index# drop删除传入的值，insert插入，unique计算唯一值得数组# reindex前向填充obj = pd.Series(['red', 'blue', 'yellow'], index=[0, 2, 4])obj = obj.reindex(list(range(6)), method='ffill')print(obj)# drop方法的使用df4 = pd.DataFrame(np.arange(16).reshape(4, 4), index=['Ohio', 'Colorado', 'Utah', 'New York'],                   columns=['one', 'two', 'three', 'four'])df4.drop('Ohio')df4.drop(['one', 'two'], axis=1)  # 指定必须制定axis，1表示删除列# 索引obj1 = pd.DataFrame(np.arange(12).reshape(3, 4), index=['one', 'two', 'three'], columns=['a', 'b', 'c', 'd'])obj = pd.Series(np.arange(3), index=['one', 'two', 'three'])# Series可通过index来索引行print(obj)print(obj['one'])print(obj[1])print(obj[['one', 'two']])print(obj[obj > 0])print(obj[1:2])print(obj[[1, 2]])# Dataframe可通过数值、column索引列，可通过标量和布尔值索银行，不可通过index索引行print(obj1['a'])print(obj1[:2])print(obj1[obj1['c'] > 5])# 因此选取dataframe行和列的子集需要通过ix方法进行选取，ix是一种重新索引的简单手段# 数据自动对齐,取其并集s1 = pd.Series(np.arange(4), index=['a', 'b', 'c', 'd'])s2 = pd.Series([1, 3, 5, 6], index=['a', 'b', 'c', 'e'])print(s1 + s2)obj2 = pd.DataFrame(np.arange(12).reshape(3, 4), index=['one', 'two', 'three'], columns=list('abcd'))print(obj2)obj1.add(obj2, fill_value=0)  # add表示加法，fill_value表示对nan填充值# 在算数方法中填充值df5 = pd.DataFrame(np.arange(12).reshape(3, 4), index=['a', 'b', 'c'], columns=list('1234'))df6 = pd.DataFrame(np.arange(20).reshape(4, 5), index=['a', 'b', 'c', 'd'], columns=list('12345'))s3 = df5['1']df6.add(df5, fill_value=0)  # 用df5的add方法指定填充值，则会将没有重叠的地方自动填充值并加入运算print(df5 + df6)  # 两个df相加没有重叠位置就会产生nanprint(df5.sub(s3, axis=0))  # 指定匹配的轴，0表示匹配行进行列广播，1表示匹配列行广播# 函数应用和映射frame = pd.DataFrame(np.random.randn(4, 3), columns=list('012'))print(frame)np.abs(frame)# apply函数应用def cha(x):    return x.max() - x.min()frame.apply(cha, axis=1)def g(x):    return pd.Series([x.max(), x.min()], index=['min', 'max'])g(frame)# 排序和排名frame.sort_values(by='2', ascending=True)  # 按指定列排序frame.sort_index()frame2 = pd.DataFrame({'a': [1, 1, 0, 0], 'b': [2, 3, 4, 5]})frame2.sort_values(by=['a', 'b'], ascending=False)# 重复值的轴索引frame3 = pd.DataFrame(np.random.randn(3, 4), columns=list('aabb'))print(frame3['a'])# 协方差与相关系数# 唯一值、计数、成员资格s1.unique()  # Series有效s1.value_counts()s1.isin(['1'])# 处理缺失数据string_data = pd.Series(['aaada', 'dsau', np.nan, 'safe'])print(string_data)string_data.isnull()  # None也会被当做Nanstring_data.dropna()  # 删除缺失值string_data1 = pd.DataFrame(np.random.randn(3, 3))string_data1[3] = np.nanstring_data1.iloc[0, 1] = np.nanstring_data1.iloc[1, 0] = np.nanstring_data1.iloc[2, 3] = 2print(string_data1)string_data1.dropna(thresh=2)  # 时间序列数据适用，thresh表示筛选一行中有thresh参数指定的完整数据的行string_data1.dropna(how='all', axis=1)  # 丢弃所有行都是NA的数据# 填充缺失数据string_data1.fillna(-1)string_data1.fillna(string_data1.mean())# 层次化索引data2 = pd.Series(np.random.randn(9),                  index=[['a', 'a', 'a', 'b', 'b', 'b', 'c', 'c', 'c'], [1, 2, 3, 1, 2, 3, 1, 2, 3]])print(data2)print(data2['a'])print(data2['a':'b'])print(data2.loc[['a', 'c']])print(data2[:, 1])  # 直接筛选内层数据data2.unstack()  # 直接转化为dataframeframe4 = pd.DataFrame(np.random.rand(4, 3), index=[['a', 'a', 'b', 'b'], [1, 2, 1, 2]],                      columns=[['ohio', 'ohio', 'colorado'], ['g', 'r', 'g']])print(frame4)frame4.index.names = ['key1', 'key2']frame4.columns.names = ['state', 'color']print(frame4['colorado'])print(frame4.loc['a'])# MultiIndex.from_arrays([['ohio', 'ohio', 'colorado'], ['g', 'r', 'g']],column_names=['state','color'])frame4.swaplevel('key1', 'key2')  # 交换某两条轴frame4.sortlevel(1)frame4.swaplevel(0, 1).sortlevel(0)  # 按级别排序# 根据级别汇总统计# level选项指定在某条轴上求和的级别frame4.sum(level='state', axis=1)frame4.sum(level='key2', axis=0)frame5 = pd.DataFrame(    {'a': list(range(7)), 'b': list(range(7, 0, -1)), 'c': ['a', 'a', 'a', 'b', 'b', 'b', 'b'],     'd': [0, 1, 0, 1, 0, 1, 0]})print(frame5)frame6 = frame5.set_index(['c'], drop=True)  # drop=False表示保留c列print(frame6)frame6.reset_index()  # set_index的逆运算f1 = pd.read_csv(r'E:\dataset\pydata-book-2nd-edition\examples\ex1.csv')f3 = pd.read_csv(r'E:\dataset\pydata-book-2nd-edition\examples\ex2.csv', header=None,                 names=['a', 'b', 'c', 'd', 'message'])f2 = pd.read_table(r'E:\dataset\pydata-book-2nd-edition\examples\ex3.txt')print(f2)print(f3)f4 = pd.read_csv(r'E:\dataset\pydata-book-2nd-edition\examples\csv_mindex.csv', index_col=['key1', 'key2'])print(f4)f5 = pd.read_table(r'E:\dataset\pydata-book-2nd-edition\examples\ex3.txt', sep='\s+')print(f5)f6 = pd.read_csv(r'E:\dataset\pydata-book-2nd-edition\examples\ex4.csv', skiprows=[0, 2, 3])print(f6)# 文件若使用0、-1等标记来表示缺失值，f7 = pd.read_csv(r'E:\dataset\pydata-book-2nd-edition\examples\ex5.csv', na_values=['Null'])print(f7)chunker = pd.read_csv(r'E:\dataset\pydata-book-2nd-edition\examples\ex6.csv', chunksize=1000)f8 = pd.read_csv(r'E:\dataset\pydata-book-2nd-edition\examples\ex6.csv', nrows=5)print(f8)print(chunker)tot = pd.Series([])for piece in chunker:    tot = tot.add(piece['key'].value_counts(), fill_value=0)tot.sort_values(ascending=False)print(tot)f5.to_csv('E:\dataset\pydata-book-2nd-edition\examples\ex5-1.csv')# 数据库类型数据合并data3=pd.DataFrame({'key':['a','b','c','d','a','c','d'],'data':range(7)})data4=pd.DataFrame({'key':['a','b','c'],'data':range(3)})print(data3)print(data4)# 多对一的连接默认产生内连接pd.merge(data3,data4,on='key')  # 指定共同key进行mergedt1=pd.DataFrame({'lkey':['b','c','b','a','c','b','a'],'data':range(7)})dt2=pd.DataFrame({'rkey':['a','b','d'],'data':range(3)})pd.merge(dt1,dt2,left_on='lkey',right_on='rkey')  # 分别指定key进行merge# merge相当于内连接取的是交集，还可以使用 how参数改变连接方式pd.merge(data3,data4,on='key',how='outer')# 取键的并集pd.merge(data3,data4,on='key',how='left')# 左连接pd.merge(data3,data4,on='key',how='right')# 右连接# 多对多的连接默认产生key交集的笛卡尔积dt3=pd.DataFrame({'key':['b','c','d','a','c','b','a'],'data':range(7)})dt4=pd.DataFrame({'key':['a','a','b','b','c','c'],'data':range(6)})pd.merge(dt3,dt4,on='key')
